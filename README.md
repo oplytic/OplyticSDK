@@ -148,7 +148,7 @@ class ViewController: UIViewController, OplyticAttributionHandler {
 
 ## Author
 
-ValueMags Support, support@valuemags.com
+Oplytic Support, support@oplytic.com
 
 ## License
 
