@@ -9,7 +9,8 @@
 Pod::Spec.new do |s|
   s.name             = 'OplyticSDK'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of OplyticSDK.'
+  s.summary          = 'Oplytic SDK for attribution and deep-linking.'
+  s.swift_version = '4.1'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,17 +19,17 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Oplytic integrates seamlessly with your affiliate network and partners and connects to your mobile analytics platform, web analytics platform, CRM to get the full measurement picture.
                        DESC
 
-  s.homepage         = 'https://github.com/Donald Wakeling/OplyticSDK'
+  s.homepage         = 'https://github.com/oplytic/OplyticSDK'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Donald Wakeling' => 'donald@valuemags.com' }
-  s.source           = { :git => 'https://github.com/Donald Wakeling/OplyticSDK.git', :tag => s.version.to_s }
+  s.author           = { 'ValueMags Support' => 'support@valuemags.com' }
+  s.source           = { :git => 'https://github.com/oplytic/OplyticSDK.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.source_files = 'OplyticSDK/Classes/**/*'
   
@@ -37,6 +38,9 @@ TODO: Add long description of the pod here.
   # }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
+  
+  s.frameworks = 'UIKit', 'AdSupport'
+  s.library = 'sqlite3'
+
   # s.dependency 'AFNetworking', '~> 2.3'
 end

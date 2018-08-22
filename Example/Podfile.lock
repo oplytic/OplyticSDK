@@ -1,0 +1,16 @@
+PODS:
+  - OplyticSDK (0.1.0)
+
+DEPENDENCIES:
+  - OplyticSDK (from `../`)
+
+EXTERNAL SOURCES:
+  OplyticSDK:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  OplyticSDK: 975f328cab6072b0cb2719e1635c51bf69d0c537
+
+PODFILE CHECKSUM: 74245b3cb17c26266234a640f88ffd4b7e9bb0a7
+
+COCOAPODS: 1.5.3

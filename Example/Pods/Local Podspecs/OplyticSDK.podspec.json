@@ -1,0 +1,22 @@
+{
+  "name": "OplyticSDK",
+  "version": "0.1.0",
+  "summary": "A short description of OplyticSDK.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Donald Wakeling/OplyticSDK",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Donald Wakeling": "donald@valuemags.com"
+  },
+  "source": {
+    "git": "https://github.com/Donald Wakeling/OplyticSDK.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "OplyticSDK/Classes/**/*"
+}
