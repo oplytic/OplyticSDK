@@ -1,0 +1,6 @@
+use_frameworks!
+target 'OplyticSDK_Tests' do
+  pod 'OplyticSDK', :path => '../'
+  
+  
+end
