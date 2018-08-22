@@ -10,10 +10,10 @@ Oplytic was designed with both retailer and affiliate in mind. We know how valua
 ​
 ​It is our mission to embolden marketers to pursue their enterprise mobile and web strategies by helping them analyze their marketing and communication efforts, execute powerful tactics to engage users, and optimize media in channels that map to their objectives.
 ​
-​[![CI Status](https://img.shields.io/travis/siska/OplyticSDKRepo.svg?style=flat)](https://travis-ci.org/siska/OplyticSDKRepo)
-​[![Version](https://img.shields.io/cocoapods/v/OplyticSDKRepo.svg?style=flat)](https://cocoapods.org/pods/OplyticSDKRepo)
-​[![License](https://img.shields.io/cocoapods/l/OplyticSDKRepo.svg?style=flat)](https://cocoapods.org/pods/OplyticSDKRepo)
-​[![Platform](https://img.shields.io/cocoapods/p/OplyticSDKRepo.svg?style=flat)](https://cocoapods.org/pods/OplyticSDKRepo)
+​[![CI Status](https://img.shields.io/travis/oplytic/OplyticSDK.svg?style=flat)](https://travis-ci.org/oplytic/OplyticSDK)
+​[![Version](https://img.shields.io/cocoapods/v/OplyticSDK.svg?style=flat)](https://cocoapods.org/pods/OplyticSDK)
+​[![License](https://img.shields.io/cocoapods/l/OplyticSDK.svg?style=flat)](https://cocoapods.org/pods/OplyticSDK)
+​[![Platform](https://img.shields.io/cocoapods/p/OplyticSDK.svg?style=flat)](https://cocoapods.org/pods/OplyticSDK)
 ​
 ​
 ​## Requirements
@@ -22,11 +22,11 @@ Oplytic was designed with both retailer and affiliate in mind. We know how valua
 ​
 ​## Installation
 ​
-​OplyticSDKRepo is available through [CocoaPods](https://cocoapods.org). To install
+​OplyticSDK is available through [CocoaPods](https://cocoapods.org). To install
 ​it, simply add the following line to your Podfile:
 ​
 ​```ruby
-​pod 'OplyticSDKRepo'
+​pod 'OplyticSDK'
 ​```
 ​
 ​## Set-Up with Oplytic
@@ -66,7 +66,7 @@ Oplytic was designed with both retailer and affiliate in mind. We know how valua
 ​Follow the instructions in the above "Installation" section to add the podfile to your Xcode project.
 ​
 ​Click on your project target and under the General tab click on the “+” button in the
-​Embedded Binaries section. Choose OplyticSDKRepo.framework, which will also add an entry to the LinkedFramework and Libraries section.
+​Embedded Binaries section. Choose OplyticSDK.framework, which will also add an entry to the LinkedFramework and Libraries section.
 ​
 ​### Use the Oplytic Library
 ​
@@ -148,8 +148,8 @@ Oplytic was designed with both retailer and affiliate in mind. We know how valua
 ​
 ​## Author
 ​
-​siska, rsiska1@gmail.com
+​ValueMags Support, support@valuemags.com
 ​
 ​## License
 ​
-​OplyticSDKRepo is available under the MIT license. See the LICENSE file for more info.
+​OplyticSDK is available under the MIT license. See the LICENSE file for more info.
