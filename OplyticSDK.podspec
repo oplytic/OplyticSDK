@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OplyticSDK'
-  s.version          = '0.1.3'
+  s.version          = '0.2.0'
   s.summary          = 'Oplytic SDK for attribution and deep-linking.'
   s.swift_version = '4.1'
 

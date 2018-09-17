@@ -12,7 +12,3 @@ FOUNDATION_EXPORT double OplyticSDKVersionNumber;
 
 //! Project version string for OplyticSDK.
 FOUNDATION_EXPORT const unsigned char OplyticSDKVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <OplyticSDK/PublicHeader.h>
-
-#import <OplyticSDK/sqlite3.h>

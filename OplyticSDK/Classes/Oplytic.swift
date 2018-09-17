@@ -7,7 +7,14 @@
 import UIKit
 import AdSupport
 
-let MAXRECORDCOUNT = 1000
+let OPLYTIC_DEVICE_TOKEN = "OplyticDeviceToken"
+let OPLYTIC_CLICK_TOKEN = "OplyticClickToken"
+let OPLYTIC_EVENT_CACHE = "OplyticEventCache"
+let INSTALL_ACTION_KEY = "Install"
+let ATTRIBUTE_ACTION_KEY = "Attribute"
+let PURCHASE_ACTION_KEY = "Purchase"
+let OPLYTIC_UNIVERSAL_LINK_NOTIFICATION = "oplunivlink"
+let API_KEY = "ak"
 let DEVICETOKEN_KEY = "dt"
 let APPID_KEY = "aid"
 let CLIENTEVENTTOKEN_KEY = "cet"
@@ -21,10 +28,6 @@ let STR3_KEY = "s3"
 let NUM1_KEY = "n1"
 let NUM2_KEY = "n2"
 let TIMESTAMP_KEY = "ts"
-let INSTALL_ACTION_KEY = "Install"
-let ATTRIBUTE_ACTION_KEY = "Attribute"
-let PURCHASE_ACTION_KEY = "Purchase"
-let OPLYTIC_UNIVERSAL_LINK_NOTIFICATION = "oplunivlink"
 
 public protocol OplyticAttributionHandler {
     func onAttribution(clickUrl: String, data: [String: String])
@@ -32,8 +35,8 @@ public protocol OplyticAttributionHandler {
 
 public class Oplytic
 {
-    private static var _hasBeenSetup : Bool = false
-    private static var _appLink : String = ""
+    private static var _apiKey : String = ""
+    private static var _appLink : String = ".oplct.com"
     private static var _appId : String = ""
     private static var _deviceToken : String = ""
     private static var _clickToken : String = ""
@@ -41,44 +44,15 @@ public class Oplytic
     private static var _deferredClickUrl : String? = nil
     private static var _oplyticAttributionHandler: OplyticAttributionHandler?
     
-    public static func start()
+    public static func start(apiKey : String)
     {
-        let serialQueue = DispatchQueue(label: "oplytic")
-        serialQueue.sync
+        let oplyticQueue = DispatchQueue(label: "oplytic")
+        oplyticQueue.sync
         {
-            setup()
-        }
-    }
-    
-    public static func registerAttributionHandler(oplyticAttributionHandler: OplyticAttributionHandler){
-        _oplyticAttributionHandler = oplyticAttributionHandler
-        if(_deferredClickUrl != nil){
-            attribute(clickUrl: _deferredClickUrl!)
-            _deferredClickUrl = nil
-        }
-    }
-    
-    //I think we need to add some logic here to check if we are setup already. We don't want to call this logic twice
-    //If we don't need to. That may be why we are getting duplicate events...
-    //We call setup from
-    //1. Start method
-    //2. Handle Universal Link handler / method
-    //3. Add Event method
-    private static func setup()
-    {
-//        if(!_hasBeenSetup){
-//            _hasBeenSetup = true //ensures only called once
-        if(_cache == nil){
-            _appLink = ".oplct.com"
-            if let path = Bundle.main.path(forResource: "Info", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject] {
-                // use swift dictionary as normal
-                if let oplyticAppName = dict["oplyticappname"] {
-                    _appLink = (oplyticAppName as! String) + _appLink
-                }
-            }
-            
+            _apiKey = apiKey
             _appId = Bundle.main.bundleIdentifier!
-            _deviceToken = getDeviceToken()
+            let oplyticDeviceToken : String? = (UserDefaults.standard.object(forKey: OPLYTIC_DEVICE_TOKEN) as? String)
+            _deviceToken = getSetDeviceToken()
             let clickToken = getClickToken()
             if(clickToken == nil){
                 _clickToken = ""
@@ -95,48 +69,38 @@ public class Oplytic
             if(clickUrl != nil){
                 tryAttribute(clickUrl:clickUrl!)
             }
-            if(_cache!.NewlyInstalled) {
+            
+            if(oplyticDeviceToken == nil) {
                 addInstallEvent();
             }
         }
     }
     
-    private static func reset(){
-        
-        UserDefaults.standard.set(nil, forKey: DEVICETOKEN_KEY)
-        UserDefaults.standard.set(nil, forKey: CLICKTOKEN_KEY)
+    public static func registerAttributionHandler(oplyticAttributionHandler: OplyticAttributionHandler){
+        _oplyticAttributionHandler = oplyticAttributionHandler
+        if(_deferredClickUrl != nil){
+            attribute(clickUrl: _deferredClickUrl!)
+            _deferredClickUrl = nil
+        }
     }
     
     private static func subscribeToBackgroundEvents() {
-        NotificationCenter.default.addObserver(Oplytic.self,
-                                               selector: #selector(Oplytic.onEnterBackground),
-                                               name: NSNotification.Name.UIApplicationDidEnterBackground,
-                                               object: nil)
-        
         NotificationCenter.default.addObserver(Oplytic.self,
                                                selector: #selector(Oplytic.onEnterForeground),
                                                name: NSNotification.Name.UIApplicationWillEnterForeground,
                                                object: nil)
     }
     
-    @objc static func onEnterBackground(notification : NSNotification) {
-        let serialQueue = DispatchQueue(label: "oplytic")
-        serialQueue.sync
-        {
-            _cache?.sendEvents()
-        }
-    }
-    
     @objc static func onEnterForeground(notification : NSNotification) {
         let serialQueue = DispatchQueue(label: "oplytic")
         serialQueue.sync
         {
-            _cache?.sendEvents()
+            _cache?.sendCachedEvents()
         }
     }
     
-    private static func getDeviceToken() -> String {
-        var token : String? = UserDefaults.standard.object(forKey: DEVICETOKEN_KEY) as? String
+    private static func getSetDeviceToken() -> String {
+        var token : String? = UserDefaults.standard.object(forKey: OPLYTIC_DEVICE_TOKEN) as? String
         if (token == nil)
         {
             if ASIdentifierManager.shared().isAdvertisingTrackingEnabled
@@ -148,25 +112,22 @@ public class Oplytic
         {
             token = UUID().uuidString
         }
-        UserDefaults.standard.set(token, forKey: DEVICETOKEN_KEY)
+        UserDefaults.standard.set(token, forKey: OPLYTIC_DEVICE_TOKEN)
         return token!
     }
     
     private static func getClickToken() -> String? {
-        return (UserDefaults.standard.object(forKey: CLICKTOKEN_KEY) as? String)
+        return (UserDefaults.standard.object(forKey: OPLYTIC_CLICK_TOKEN) as? String)
     }
     
     private static func setClickToken(clickToken : String) {
-        UserDefaults.standard.set(clickToken, forKey: CLICKTOKEN_KEY)
+        UserDefaults.standard.set(clickToken, forKey: OPLYTIC_CLICK_TOKEN)
     }
     
     public static func handleUniversalLink(userActivity : NSUserActivity) {
         let serialQueue = DispatchQueue(label: "oplytic")
         serialQueue.sync
         {
-            setup()
-            //This will call tryAttribute again but this is already called in the setup() and addEvent method
-            //Maybe this is why we are getting dupes
             processUniversalLink(userActivity: userActivity)
         }
     }
@@ -177,7 +138,7 @@ public class Oplytic
             let webPageURL = userActivity.webpageURL
             if(webPageURL != nil) {
                 let clickUrl = "\(webPageURL!)"
-                if (clickUrl.contains("/" + _appLink)){
+                if (clickUrl.contains(_appLink)){
                     tryAttribute(clickUrl:clickUrl)
                 }
             }
@@ -220,7 +181,7 @@ public class Oplytic
         guard let text = UIPasteboard.general.string else { return nil }
         guard let data = Data(base64Encoded: text) else { return nil }
         guard let clickUrl = String(data: data, encoding: .utf8) else { return nil}
-        if (clickUrl.contains("/" + _appLink)){
+        if (clickUrl.contains(_appLink)){
             UIPasteboard.general.strings = []
             return clickUrl
         }
@@ -241,7 +202,7 @@ public class Oplytic
     }
 
     private static func extractClickToken(clickUrl:String)->String?{
-        if (clickUrl.contains("/" + _appLink)) {
+        if (clickUrl.contains(_appLink)) {
             var clickToken: String? = nil
             if clickUrl.count > 40 {
                 let s1 = clickUrl.index(clickUrl.endIndex, offsetBy: -40)
@@ -300,16 +261,12 @@ public class Oplytic
                                 str1: String? = nil, str2: String? = nil, str3: String? = nil,
                                 num1 : Double? = nil, num2: Double? = nil)
     {
-        let serialQueue = DispatchQueue(label: "oplytic")
-        serialQueue.sync
+        let oplyticQueue = DispatchQueue(label: "oplytic")
+        oplyticQueue.sync
         {
-            setup()
-            
-            var data : [String : String] = [:]
-            
-            let clientEventId = UUID().uuidString
-            
-            data[CLIENTEVENTTOKEN_KEY] = clientEventId
+            var data : [String : Any] = [:]
+            data[API_KEY] = _apiKey
+            data[CLIENTEVENTTOKEN_KEY] = UUID().uuidString
             data[DEVICETOKEN_KEY] = _deviceToken
             data[CLICKTOKEN_KEY] = _clickToken
             data[APPID_KEY] = _appId
@@ -333,10 +290,10 @@ public class Oplytic
                 data[STR3_KEY] = str3!
             }
             if num1 != nil {
-                data[NUM1_KEY] = "\(num1!)"
+                data[NUM1_KEY] = num1!
             }
             if num2 != nil {
-                data[NUM2_KEY] = "\(num2!)"
+                data[NUM2_KEY] = num2!
             }            
             _cache?.addEvent(data: data)
         }

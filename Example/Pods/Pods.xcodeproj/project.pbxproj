@@ -11,7 +11,6 @@
 		186487C1B010B27A1C4D6E96EF72487A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A16F4CFC63FAC439D7A04994F579A03 /* Foundation.framework */; };
 		BF295C7A212DEDF8002CA938 /* Oplytic.h in Headers */ = {isa = PBXBuildFile; fileRef = BF295C75212DEDF7002CA938 /* Oplytic.h */; };
 		BF295C7B212DEDF8002CA938 /* Oplytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF295C77212DEDF7002CA938 /* Oplytic.swift */; };
-		BF295C7C212DEDF8002CA938 /* sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = BF295C78212DEDF8002CA938 /* sqlite3.h */; };
 		BF295C7D212DEDF8002CA938 /* OPLDBCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF295C79212DEDF8002CA938 /* OPLDBCache.swift */; };
 		DB83E841ABCA25BB2ED308FC58A6EFBA /* OplyticSDK-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A5570E98994B901CA478882966CF8614 /* OplyticSDK-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DE1CE5B8FEFE42E945BE788EB55E43F5 /* Pods-OplyticSDK_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1078CE05B23CF57FF742EAA54D658AF8 /* Pods-OplyticSDK_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -51,7 +50,6 @@
 		BF295C75212DEDF7002CA938 /* Oplytic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Oplytic.h; path = OplyticSDK/Classes/Oplytic.h; sourceTree = "<group>"; };
 		BF295C76212DEDF7002CA938 /* module.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = OplyticSDK/Classes/module.modulemap; sourceTree = "<group>"; };
 		BF295C77212DEDF7002CA938 /* Oplytic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Oplytic.swift; path = OplyticSDK/Classes/Oplytic.swift; sourceTree = "<group>"; };
-		BF295C78212DEDF8002CA938 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = OplyticSDK/Classes/sqlite3.h; sourceTree = "<group>"; };
 		BF295C79212DEDF8002CA938 /* OPLDBCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OPLDBCache.swift; path = OplyticSDK/Classes/OPLDBCache.swift; sourceTree = "<group>"; };
 		C88BD989512CE77069FB8F4005E7EB8B /* Pods-OplyticSDK_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-OplyticSDK_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		CF3128EF96E42FA570EDC64DDE88CF40 /* Pods-OplyticSDK_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-OplyticSDK_Tests.modulemap"; sourceTree = "<group>"; };
@@ -103,7 +101,6 @@
 				BF295C79212DEDF8002CA938 /* OPLDBCache.swift */,
 				BF295C75212DEDF7002CA938 /* Oplytic.h */,
 				BF295C77212DEDF7002CA938 /* Oplytic.swift */,
-				BF295C78212DEDF8002CA938 /* sqlite3.h */,
 				C8BEB01D2EC9E4FF4DAD273741B1E2A3 /* Pod */,
 				6A593EF10A9CD5ACAA2C6BA4BCF8D5AA /* Support Files */,
 			);
@@ -197,7 +194,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB83E841ABCA25BB2ED308FC58A6EFBA /* OplyticSDK-umbrella.h in Headers */,
-				BF295C7C212DEDF8002CA938 /* sqlite3.h in Headers */,
 				BF295C7A212DEDF8002CA938 /* Oplytic.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
