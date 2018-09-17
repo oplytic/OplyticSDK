@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'OplyticSDK'
-  s.version          = '0.2.0'
+  s.version          = '0.2.1'
   s.summary          = 'Oplytic SDK for attribution and deep-linking.'
   s.swift_version = '4.1'
 
@@ -40,7 +40,6 @@ Oplytic integrates seamlessly with your affiliate network and partners and conne
   # s.public_header_files = 'Pod/Classes/**/*.h'
   
   s.frameworks = 'UIKit', 'AdSupport'
-  s.library = 'sqlite3'
 
   # s.dependency 'AFNetworking', '~> 2.3'
 end

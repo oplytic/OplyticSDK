@@ -23,9 +23,6 @@ public class OPLDBCache: NSObject
     {
         super.init()
         
-        //TODO::remove from production, just for testing
-        reset();
-        
         initEventCache();
         
         _disableHours = UserDefaults.standard.object(forKey: DISABLEHOURS_KEY) as? Double
