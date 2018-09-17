@@ -30,10 +30,9 @@ public class OPLDBCache: NSObject
     }
     
     private func reset(){
-        
         UserDefaults.standard.set(nil, forKey: OPLYTIC_EVENT_CACHE)
-        UserDefaults.standard.set(nil, forKey: DEVICETOKEN_KEY)
-        UserDefaults.standard.set(nil, forKey: CLICKTOKEN_KEY)
+        UserDefaults.standard.set(nil, forKey: OPLYTIC_DEVICE_TOKEN)
+        UserDefaults.standard.set(nil, forKey: OPLYTIC_CLICK_TOKEN)
     }
     
     private func initEventCache() {

@@ -38,10 +38,10 @@ public class Oplytic
     private static var _apiKey : String = ""
     private static var _appLink : String = ".oplct.com"
     private static var _appId : String = ""
-    private static var _deviceToken : String = ""
-    private static var _clickToken : String = ""
-    private static var _cache : OPLDBCache? = nil
-    private static var _deferredClickUrl : String? = nil
+    private static var _deviceToken : String?
+    private static var _clickToken : String?
+    private static var _cache : OPLDBCache?
+    private static var _deferredClickUrl : String?
     private static var _oplyticAttributionHandler: OplyticAttributionHandler?
     
     public static func start(apiKey : String)
@@ -51,27 +51,25 @@ public class Oplytic
         {
             _apiKey = apiKey
             _appId = Bundle.main.bundleIdentifier!
-            let oplyticDeviceToken : String? = (UserDefaults.standard.object(forKey: OPLYTIC_DEVICE_TOKEN) as? String)
-            _deviceToken = getSetDeviceToken()
-            let clickToken = getClickToken()
-            if(clickToken == nil){
-                _clickToken = ""
-            }
-            else{
-                _clickToken = clickToken!
-            }
             
             _cache = OPLDBCache.sharedInstance
             
             subscribeToBackgroundEvents()
             
+            _clickToken = (UserDefaults.standard.object(forKey: OPLYTIC_CLICK_TOKEN) as? String)
+            if(_clickToken == nil){
+                _clickToken = ""
+            }
+            
+            _deviceToken = (UserDefaults.standard.object(forKey: OPLYTIC_DEVICE_TOKEN) as? String)
+            if(_deviceToken == nil){
+                _deviceToken = createDeviceToken()
+                addInstallEvent();
+            }
+            
             let clickUrl = getInstallClickUrl()
             if(clickUrl != nil){
                 tryAttribute(clickUrl:clickUrl!)
-            }
-            
-            if(oplyticDeviceToken == nil) {
-                addInstallEvent();
             }
         }
     }
@@ -94,19 +92,15 @@ public class Oplytic
     @objc static func onEnterForeground(notification : NSNotification) {
         let serialQueue = DispatchQueue(label: "oplytic")
         serialQueue.sync
-        {
-            _cache?.sendCachedEvents()
+            {
+                _cache?.sendCachedEvents()
         }
     }
     
-    private static func getSetDeviceToken() -> String {
-        var token : String? = UserDefaults.standard.object(forKey: OPLYTIC_DEVICE_TOKEN) as? String
-        if (token == nil)
-        {
-            if ASIdentifierManager.shared().isAdvertisingTrackingEnabled
-            {
-                token = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-            }
+    private static func createDeviceToken() -> String {
+        var token : String?
+        if ASIdentifierManager.shared().isAdvertisingTrackingEnabled {
+            token = ASIdentifierManager.shared().advertisingIdentifier.uuidString
         }
         if (token == nil)
         {
@@ -116,10 +110,6 @@ public class Oplytic
         return token!
     }
     
-    private static func getClickToken() -> String? {
-        return (UserDefaults.standard.object(forKey: OPLYTIC_CLICK_TOKEN) as? String)
-    }
-    
     private static func setClickToken(clickToken : String) {
         UserDefaults.standard.set(clickToken, forKey: OPLYTIC_CLICK_TOKEN)
     }
@@ -127,8 +117,8 @@ public class Oplytic
     public static func handleUniversalLink(userActivity : NSUserActivity) {
         let serialQueue = DispatchQueue(label: "oplytic")
         serialQueue.sync
-        {
-            processUniversalLink(userActivity: userActivity)
+            {
+                processUniversalLink(userActivity: userActivity)
         }
     }
     
@@ -159,7 +149,7 @@ public class Oplytic
                  num1: quantity,
                  num2: price)
     }
-
+    
     
     private static func addInstallEvent() {
         var adidString : String? = nil
@@ -168,13 +158,13 @@ public class Oplytic
             adidString = "ADID"
         }
         addEvent(eventAction: INSTALL_ACTION_KEY,
-                     eventObject: adidString,
-                     eventId: nil,
-                     str1: nil,
-                     str2: nil,
-                     str3: nil,
-                     num1: nil,
-                     num2: nil)
+                 eventObject: adidString,
+                 eventId: nil,
+                 str1: nil,
+                 str2: nil,
+                 str3: nil,
+                 num1: nil,
+                 num2: nil)
     }
     
     private static func getInstallClickUrl() -> String? {
@@ -197,10 +187,10 @@ public class Oplytic
         }
         if(clickToken == _clickToken) { return; } //no dupe
         _clickToken = clickToken!
-        setClickToken(clickToken: _clickToken)
+        setClickToken(clickToken: _clickToken!)
         addAttributeEvent(clickToken: clickToken!, clickUrl: clickUrl, pushClickUrl: pushClickUrl)
     }
-
+    
     private static func extractClickToken(clickUrl:String)->String?{
         if (clickUrl.contains(_appLink)) {
             var clickToken: String? = nil
@@ -263,39 +253,39 @@ public class Oplytic
     {
         let oplyticQueue = DispatchQueue(label: "oplytic")
         oplyticQueue.sync
-        {
-            var data : [String : Any] = [:]
-            data[API_KEY] = _apiKey
-            data[CLIENTEVENTTOKEN_KEY] = UUID().uuidString
-            data[DEVICETOKEN_KEY] = _deviceToken
-            data[CLICKTOKEN_KEY] = _clickToken
-            data[APPID_KEY] = _appId
-            
-            if eventAction != nil {
-                data[EVENTACTION_KEY] = eventAction!
-            }
-            if eventObject != nil {
-                data[EVENTOBJECT_KEY] = eventObject!
-            }
-            if eventId != nil {
-                data[EVENTID_KEY] = eventId!
-            }
-            if str1 != nil {
-                data[STR1_KEY] = str1!
-            }
-            if str2 != nil {
-                data[STR2_KEY] = str2!
-            }
-            if str3 != nil {
-                data[STR3_KEY] = str3!
-            }
-            if num1 != nil {
-                data[NUM1_KEY] = num1!
-            }
-            if num2 != nil {
-                data[NUM2_KEY] = num2!
-            }            
-            _cache?.addEvent(data: data)
+            {
+                var data : [String : Any] = [:]
+                data[API_KEY] = _apiKey
+                data[CLIENTEVENTTOKEN_KEY] = UUID().uuidString
+                data[DEVICETOKEN_KEY] = _deviceToken
+                data[CLICKTOKEN_KEY] = _clickToken
+                data[APPID_KEY] = _appId
+                
+                if eventAction != nil {
+                    data[EVENTACTION_KEY] = eventAction!
+                }
+                if eventObject != nil {
+                    data[EVENTOBJECT_KEY] = eventObject!
+                }
+                if eventId != nil {
+                    data[EVENTID_KEY] = eventId!
+                }
+                if str1 != nil {
+                    data[STR1_KEY] = str1!
+                }
+                if str2 != nil {
+                    data[STR2_KEY] = str2!
+                }
+                if str3 != nil {
+                    data[STR3_KEY] = str3!
+                }
+                if num1 != nil {
+                    data[NUM1_KEY] = num1!
+                }
+                if num2 != nil {
+                    data[NUM2_KEY] = num2!
+                }
+                _cache?.addEvent(data: data)
         }
     }
 }
